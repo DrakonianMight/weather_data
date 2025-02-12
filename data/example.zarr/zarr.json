@@ -1,0 +1,675 @@
+{
+  "attributes": {
+    "GRIB_edition": 2,
+    "GRIB_centre": "ecmf",
+    "GRIB_centreDescription": "European Centre for Medium-Range Weather Forecasts",
+    "GRIB_subCentre": 0,
+    "Conventions": "CF-1.7",
+    "institution": "European Centre for Medium-Range Weather Forecasts",
+    "history": "2025-02-12T22:15 GRIB to CDM+CF via cfgrib-0.9.15.0/ecCodes-2.40.0 with {\"source\": \"../data/example.grib2\", \"filter_by_keys\": {}, \"encode_cf\": [\"parameter\", \"time\", \"geography\", \"vertical\"]}"
+  },
+  "zarr_format": 3,
+  "consolidated_metadata": {
+    "kind": "inline",
+    "must_understand": false,
+    "metadata": {
+      "mwd": {
+        "shape": [
+          451,
+          900
+        ],
+        "data_type": "float32",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": [
+              226,
+              450
+            ]
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "GRIB_paramId": 140230,
+          "GRIB_dataType": "fc",
+          "GRIB_numberOfPoints": 405900,
+          "GRIB_typeOfLevel": "meanSea",
+          "GRIB_stepUnits": 1,
+          "GRIB_stepType": "instant",
+          "GRIB_gridType": "regular_ll",
+          "GRIB_uvRelativeToGrid": 0,
+          "GRIB_NV": 0,
+          "GRIB_Nx": 900,
+          "GRIB_Ny": 451,
+          "GRIB_cfName": "unknown",
+          "GRIB_cfVarName": "mwd",
+          "GRIB_gridDefinitionDescription": "Latitude/longitude",
+          "GRIB_iDirectionIncrementInDegrees": 0.4,
+          "GRIB_iScansNegatively": 0,
+          "GRIB_jDirectionIncrementInDegrees": 0.4,
+          "GRIB_jPointsAreConsecutive": 0,
+          "GRIB_jScansPositively": 0,
+          "GRIB_latitudeOfFirstGridPointInDegrees": 90.0,
+          "GRIB_latitudeOfLastGridPointInDegrees": -90.0,
+          "GRIB_longitudeOfFirstGridPointInDegrees": 180.0,
+          "GRIB_longitudeOfLastGridPointInDegrees": 179.6,
+          "GRIB_missingValue": 3.4028234663852886e+38,
+          "GRIB_name": "Mean wave direction",
+          "GRIB_shortName": "mwd",
+          "GRIB_units": "Degree true",
+          "long_name": "Mean wave direction",
+          "units": "Degree true",
+          "standard_name": "unknown",
+          "coordinates": "time step meanSea latitude longitude valid_time",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "dimension_names": [
+          "latitude",
+          "longitude"
+        ],
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "pp1d": {
+        "shape": [
+          451,
+          900
+        ],
+        "data_type": "float32",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": [
+              226,
+              450
+            ]
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "GRIB_paramId": 140231,
+          "GRIB_dataType": "fc",
+          "GRIB_numberOfPoints": 405900,
+          "GRIB_typeOfLevel": "meanSea",
+          "GRIB_stepUnits": 1,
+          "GRIB_stepType": "instant",
+          "GRIB_gridType": "regular_ll",
+          "GRIB_uvRelativeToGrid": 0,
+          "GRIB_NV": 0,
+          "GRIB_Nx": 900,
+          "GRIB_Ny": 451,
+          "GRIB_cfName": "unknown",
+          "GRIB_cfVarName": "pp1d",
+          "GRIB_gridDefinitionDescription": "Latitude/longitude",
+          "GRIB_iDirectionIncrementInDegrees": 0.4,
+          "GRIB_iScansNegatively": 0,
+          "GRIB_jDirectionIncrementInDegrees": 0.4,
+          "GRIB_jPointsAreConsecutive": 0,
+          "GRIB_jScansPositively": 0,
+          "GRIB_latitudeOfFirstGridPointInDegrees": 90.0,
+          "GRIB_latitudeOfLastGridPointInDegrees": -90.0,
+          "GRIB_longitudeOfFirstGridPointInDegrees": 180.0,
+          "GRIB_longitudeOfLastGridPointInDegrees": 179.6,
+          "GRIB_missingValue": 3.4028234663852886e+38,
+          "GRIB_name": "Peak wave period",
+          "GRIB_shortName": "pp1d",
+          "GRIB_units": "s",
+          "long_name": "Peak wave period",
+          "units": "s",
+          "standard_name": "unknown",
+          "coordinates": "time step meanSea latitude longitude valid_time",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "dimension_names": [
+          "latitude",
+          "longitude"
+        ],
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "latitude": {
+        "shape": [
+          451
+        ],
+        "data_type": "float64",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": [
+              451
+            ]
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "units": "degrees_north",
+          "standard_name": "latitude",
+          "long_name": "latitude",
+          "stored_direction": "decreasing",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "dimension_names": [
+          "latitude"
+        ],
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "step": {
+        "shape": [],
+        "data_type": "float64",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": []
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "long_name": "time since forecast_reference_time",
+          "standard_name": "forecast_period",
+          "units": "hours",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "mp2": {
+        "shape": [
+          451,
+          900
+        ],
+        "data_type": "float32",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": [
+              226,
+              450
+            ]
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "GRIB_paramId": 140221,
+          "GRIB_dataType": "fc",
+          "GRIB_numberOfPoints": 405900,
+          "GRIB_typeOfLevel": "meanSea",
+          "GRIB_stepUnits": 1,
+          "GRIB_stepType": "instant",
+          "GRIB_gridType": "regular_ll",
+          "GRIB_uvRelativeToGrid": 0,
+          "GRIB_NV": 0,
+          "GRIB_Nx": 900,
+          "GRIB_Ny": 451,
+          "GRIB_cfName": "unknown",
+          "GRIB_cfVarName": "mp2",
+          "GRIB_gridDefinitionDescription": "Latitude/longitude",
+          "GRIB_iDirectionIncrementInDegrees": 0.4,
+          "GRIB_iScansNegatively": 0,
+          "GRIB_jDirectionIncrementInDegrees": 0.4,
+          "GRIB_jPointsAreConsecutive": 0,
+          "GRIB_jScansPositively": 0,
+          "GRIB_latitudeOfFirstGridPointInDegrees": 90.0,
+          "GRIB_latitudeOfLastGridPointInDegrees": -90.0,
+          "GRIB_longitudeOfFirstGridPointInDegrees": 180.0,
+          "GRIB_longitudeOfLastGridPointInDegrees": 179.6,
+          "GRIB_missingValue": 3.4028234663852886e+38,
+          "GRIB_name": "Mean zero-crossing wave period",
+          "GRIB_shortName": "mp2",
+          "GRIB_units": "s",
+          "long_name": "Mean zero-crossing wave period",
+          "units": "s",
+          "standard_name": "unknown",
+          "coordinates": "time step meanSea latitude longitude valid_time",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "dimension_names": [
+          "latitude",
+          "longitude"
+        ],
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "valid_time": {
+        "shape": [],
+        "data_type": "float64",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": []
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "standard_name": "time",
+          "long_name": "time",
+          "units": "seconds since 1970-01-01",
+          "calendar": "proleptic_gregorian",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "swh": {
+        "shape": [
+          451,
+          900
+        ],
+        "data_type": "float32",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": [
+              226,
+              450
+            ]
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "GRIB_paramId": 140229,
+          "GRIB_dataType": "fc",
+          "GRIB_numberOfPoints": 405900,
+          "GRIB_typeOfLevel": "meanSea",
+          "GRIB_stepUnits": 1,
+          "GRIB_stepType": "instant",
+          "GRIB_gridType": "regular_ll",
+          "GRIB_uvRelativeToGrid": 0,
+          "GRIB_NV": 0,
+          "GRIB_Nx": 900,
+          "GRIB_Ny": 451,
+          "GRIB_cfName": "unknown",
+          "GRIB_cfVarName": "swh",
+          "GRIB_gridDefinitionDescription": "Latitude/longitude",
+          "GRIB_iDirectionIncrementInDegrees": 0.4,
+          "GRIB_iScansNegatively": 0,
+          "GRIB_jDirectionIncrementInDegrees": 0.4,
+          "GRIB_jPointsAreConsecutive": 0,
+          "GRIB_jScansPositively": 0,
+          "GRIB_latitudeOfFirstGridPointInDegrees": 90.0,
+          "GRIB_latitudeOfLastGridPointInDegrees": -90.0,
+          "GRIB_longitudeOfFirstGridPointInDegrees": 180.0,
+          "GRIB_longitudeOfLastGridPointInDegrees": 179.6,
+          "GRIB_missingValue": 3.4028234663852886e+38,
+          "GRIB_name": "Significant height of combined wind waves and swell",
+          "GRIB_shortName": "swh",
+          "GRIB_units": "m",
+          "long_name": "Significant height of combined wind waves and swell",
+          "units": "m",
+          "standard_name": "unknown",
+          "coordinates": "time step meanSea latitude longitude valid_time",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "dimension_names": [
+          "latitude",
+          "longitude"
+        ],
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "time": {
+        "shape": [],
+        "data_type": "int64",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": []
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "long_name": "initial time of forecast",
+          "standard_name": "forecast_reference_time",
+          "units": "seconds since 1970-01-01",
+          "calendar": "proleptic_gregorian"
+        },
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "mwp": {
+        "shape": [
+          451,
+          900
+        ],
+        "data_type": "float32",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": [
+              226,
+              450
+            ]
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "GRIB_paramId": 140232,
+          "GRIB_dataType": "fc",
+          "GRIB_numberOfPoints": 405900,
+          "GRIB_typeOfLevel": "meanSea",
+          "GRIB_stepUnits": 1,
+          "GRIB_stepType": "instant",
+          "GRIB_gridType": "regular_ll",
+          "GRIB_uvRelativeToGrid": 0,
+          "GRIB_NV": 0,
+          "GRIB_Nx": 900,
+          "GRIB_Ny": 451,
+          "GRIB_cfName": "unknown",
+          "GRIB_cfVarName": "mwp",
+          "GRIB_gridDefinitionDescription": "Latitude/longitude",
+          "GRIB_iDirectionIncrementInDegrees": 0.4,
+          "GRIB_iScansNegatively": 0,
+          "GRIB_jDirectionIncrementInDegrees": 0.4,
+          "GRIB_jPointsAreConsecutive": 0,
+          "GRIB_jScansPositively": 0,
+          "GRIB_latitudeOfFirstGridPointInDegrees": 90.0,
+          "GRIB_latitudeOfLastGridPointInDegrees": -90.0,
+          "GRIB_longitudeOfFirstGridPointInDegrees": 180.0,
+          "GRIB_longitudeOfLastGridPointInDegrees": 179.6,
+          "GRIB_missingValue": 3.4028234663852886e+38,
+          "GRIB_name": "Mean wave period",
+          "GRIB_shortName": "mwp",
+          "GRIB_units": "s",
+          "long_name": "Mean wave period",
+          "units": "s",
+          "standard_name": "unknown",
+          "coordinates": "time step meanSea latitude longitude valid_time",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "dimension_names": [
+          "latitude",
+          "longitude"
+        ],
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "longitude": {
+        "shape": [
+          900
+        ],
+        "data_type": "float64",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": [
+              900
+            ]
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "units": "degrees_east",
+          "standard_name": "longitude",
+          "long_name": "longitude",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "dimension_names": [
+          "longitude"
+        ],
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      },
+      "meanSea": {
+        "shape": [],
+        "data_type": "float64",
+        "chunk_grid": {
+          "name": "regular",
+          "configuration": {
+            "chunk_shape": []
+          }
+        },
+        "chunk_key_encoding": {
+          "name": "default",
+          "configuration": {
+            "separator": "/"
+          }
+        },
+        "fill_value": 0.0,
+        "codecs": [
+          {
+            "name": "bytes",
+            "configuration": {
+              "endian": "little"
+            }
+          },
+          {
+            "name": "zstd",
+            "configuration": {
+              "level": 0,
+              "checksum": false
+            }
+          }
+        ],
+        "attributes": {
+          "long_name": "original GRIB coordinate for key: level(meanSea)",
+          "units": "1",
+          "_FillValue": "AAAAAAAA+H8="
+        },
+        "zarr_format": 3,
+        "node_type": "array",
+        "storage_transformers": []
+      }
+    }
+  },
+  "node_type": "group"
+}

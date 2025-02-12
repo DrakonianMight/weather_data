@@ -1,87 +1,93 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+import time
+import os
+import json
 import xarray as xr
 import numpy as np
-import os
+import dask.array as da
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Tuple
+from dask import delayed, compute
 
-# Define the Zarr dataset path
-ZARR_PATH = "../data/example.zarr"
-
-if not os.path.exists(ZARR_PATH):
-    raise RuntimeError(f"Zarr dataset not found at {ZARR_PATH}")
-
-# Open the dataset with Dask enabled
-ds = xr.open_zarr(ZARR_PATH, chunks={})
-
-# Detect latitude and longitude variable names
-lat_var = next((var for var in ["lat", "latitude"] if var in ds), None)
-lon_var = next((var for var in ["lon", "longitude"] if var in ds), None)
-
-if not lat_var or not lon_var:
-    raise RuntimeError("Could not detect latitude and longitude dimensions in the Zarr dataset.")
-
-# Get dataset bounds
-lat_min, lat_max = ds[lat_var].min().item(), ds[lat_var].max().item()
-lon_min, lon_max = ds[lon_var].min().item(), ds[lon_var].max().item()
-
-# Initialize FastAPI app
+# Initialize FastAPI
 app = FastAPI()
 
+# Define the input model for locations and model info
 class LocationRequest(BaseModel):
-    locations: list[tuple[float, float]]  # List of (latitude, longitude) tuples
+    locations: List[Tuple[float, float]]  # List of lat, lon tuples
+    model: str  # Source model (e.g., ECMWF)
+    model_run: str  # Model run (e.g., 12022025_00)
 
-def replace_nan_with_none(data):
-    """Recursively replace NaN with None for JSON serialization."""
-    if isinstance(data, dict):
-        return {key: replace_nan_with_none(value) for key, value in data.items()}
-    elif isinstance(data, list):
-        return [replace_nan_with_none(item) for item in data]
-    elif isinstance(data, float) and np.isnan(data):
-        return None
-    elif isinstance(data, float) and np.isinf(data):
-        return None  # Alternatively, return a string 'Inf' if preferred
-    return data
+# Function to load a Zarr dataset based on model and model run
+def load_zarr_dataset(model: str, model_run: str):
+    # Define the path to the model's Zarr file
+    zarr_directory = f"../data/{model}"
 
-@app.post("/extract/")
-def extract_data(request: LocationRequest):
-    lat_vals, lon_vals = zip(*request.locations)
+    if not os.path.exists(zarr_directory):
+        raise HTTPException(status_code=404, detail="Model not available")
 
-    # Ensure all requested points are within bounds
-    for lat, lon in zip(lat_vals, lon_vals):
-        if not (lat_min <= lat <= lat_max and lon_min <= lon <= lon_max):
-            raise HTTPException(status_code=400, detail=f"Coordinates ({lat}, {lon}) are out of bounds.")
+    # Construct the file name based on model run (e.g., 12022025_00.zarr)
+    zarr_file = os.path.join(zarr_directory, f"{model_run}.zarr")
 
+    if not os.path.exists(zarr_file):
+        raise HTTPException(status_code=404, detail="Model run not found")
+
+    # Load the Zarr dataset using xarray
+    return xr.open_zarr(zarr_file)
+
+# Function to extract data for a single location
+def extract_data_for_location(lat: float, lon: float, zarr_data: xr.DataArray):
     try:
-        # Parallelized lookup using vectorized selection
-        nearest = ds.sel({lat_var: list(lat_vals), lon_var: list(lon_vals)}, method="nearest")
+        # Check if the lat, lon is within the dataset bounds
+        if lat < zarr_data.coords["latitude"].min() or lat > zarr_data.coords["latitude"].max():
+            return {"lat": lat, "lon": lon, "message": "Latitude out of bounds"}
+        if lon < zarr_data.coords["longitude"].min() or lon > zarr_data.coords["longitude"].max():
+            return {"lat": lat, "lon": lon, "message": "Longitude out of bounds"}
 
-        # Convert results to a dictionary
-        results = []
-        for i, (lat, lon) in enumerate(zip(lat_vals, lon_vals)):
-            data = {}
-            
-            for var in ds.data_vars:
-                var_data = nearest[var].values[i]  # This could be an array or a scalar
+        # Find the nearest indices for latitude and longitude
+        lat_idx = np.abs(zarr_data.coords["latitude"] - lat).argmin()
+        lon_idx = np.abs(zarr_data.coords["longitude"] - lon).argmin()
 
-                # Check if the variable data is scalar or array
-                if np.isscalar(var_data):  
-                    data[var] = var_data.item()
-                elif var_data.ndim == 1:  # Handle 1D arrays (e.g., time series)
-                    data[var] = var_data.tolist()
-                else:
-                    data[var] = var_data.tolist()  # General case for multi-dimensional arrays
-
-            # Handle NaN cases (e.g., for ocean models or locations with missing data)
-            # Replace NaN values with None for JSON serialization
-            data = replace_nan_with_none(data)
-
-            # If all values are NaN (i.e., no data available), append a message
-            if all(value is None for value in data.values()):
-                results.append({"lat": lat, "lon": lon, "message": "No data available for this location (likely not in the ocean)."})
-            else:
-                results.append({"lat": lat, "lon": lon, "data": data})
-
-        return {"results": results}
-
+        # Extract the value (assuming the data is numeric, adjust for your dataset structure)
+        data_value = zarr_data[lat_idx, lon_idx].compute()  # Use compute() for Dask arrays
+        return {"lat": lat, "lon": lon, "data": data_value.tolist()}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return {"lat": lat, "lon": lon, "message": f"Error: {str(e)}"}
+
+# Function to process a batch of locations in parallel
+def extract_data_parallel(locations: List[Tuple[float, float]], zarr_data: xr.DataArray):
+    results = []
+    # Use Dask's delayed function to parallelize the extraction of data for each location
+    tasks = [delayed(extract_data_for_location)(lat, lon, zarr_data) for lat, lon in locations]
+    results = compute(*tasks)  # Compute all tasks in parallel
+    return results
+
+# Endpoint to process batch requests
+@app.post("/extract/")
+async def extract_data(request: LocationRequest):
+    start_time = time.time()
+
+    # Load the Zarr dataset based on model and model run
+    zarr_data = load_zarr_dataset(request.model, request.model_run)
+
+    # Batch size configuration
+    batch_size = 50
+    all_results = []
+
+    # Process locations in batches
+    for i in range(0, len(request.locations), batch_size):
+        batch = request.locations[i:i + batch_size]
+        batch_results = extract_data_parallel(batch, zarr_data)
+        all_results.extend(batch_results)
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
+    # Return results along with performance metrics
+    return {
+        "results": all_results,
+        "performance_metrics": {
+            "elapsed_time_seconds": elapsed_time,
+            "num_batches": len(request.locations) // batch_size + (1 if len(request.locations) % batch_size > 0 else 0)
+        }
+    }

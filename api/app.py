@@ -36,23 +36,45 @@ def load_zarr_dataset(model: str, model_run: str):
     return xr.open_zarr(zarr_file)
 
 # Function to extract data for a single location
-def extract_data_for_location(lat: float, lon: float, zarr_data: xr.DataArray):
+def extract_data_for_location(lat: float, lon: float, zarr_data: xr.Dataset):
     try:
+        # Determine correct latitude and longitude coordinate names
+        lat_dim = "lat" if "lat" in zarr_data.coords else "latitude"
+        lon_dim = "lon" if "lon" in zarr_data.coords else "longitude"
+        time_dim = "valid_time" if "valid_time" in zarr_data.coords else "time"
+
         # Check if the lat, lon is within the dataset bounds
-        if lat < zarr_data.coords["latitude"].min() or lat > zarr_data.coords["latitude"].max():
+        if lat < zarr_data.coords[lat_dim].min() or lat > zarr_data.coords[lat_dim].max():
             return {"lat": lat, "lon": lon, "message": "Latitude out of bounds"}
-        if lon < zarr_data.coords["longitude"].min() or lon > zarr_data.coords["longitude"].max():
+        if lon < zarr_data.coords[lon_dim].min() or lon > zarr_data.coords[lon_dim].max():
             return {"lat": lat, "lon": lon, "message": "Longitude out of bounds"}
 
-        # Find the nearest indices for latitude and longitude
-        lat_idx = np.abs(zarr_data.coords["latitude"] - lat).argmin()
-        lon_idx = np.abs(zarr_data.coords["longitude"] - lon).argmin()
+        # Extract the nearest data point
+        data_point = zarr_data.sel(
+            {lat_dim: lat, lon_dim: lon}, method="nearest"
+        )
 
-        # Extract the value (assuming the data is numeric, adjust for your dataset structure)
-        data_value = zarr_data[lat_idx, lon_idx].compute()  # Use compute() for Dask arrays
-        return {"lat": lat, "lon": lon, "data": data_value.tolist()}
+        # Ensure we get the correct valid time
+        if time_dim in data_point.coords:
+            valid_time = list(zarr_data.valid_time.to_pandas().unique().strftime("%Y-%m-%d %H:%M:%S"))
+        else:
+            valid_time = None  # If valid_time doesn't exist, return None
+
+        # Convert data to a serializable format
+        data_dict = {
+            var: float(data_point[var].values) if np.isscalar(data_point[var]) else data_point[var].values.tolist()
+            for var in data_point.data_vars
+        }
+        data_dict.update({"valid_time": valid_time})  # Add valid_time to the data dict
+        return {
+            "lat": lat,
+            "lon": lon,
+            "data": data_dict
+        }
+
     except Exception as e:
         return {"lat": lat, "lon": lon, "message": f"Error: {str(e)}"}
+
 
 # Function to process a batch of locations in parallel
 def extract_data_parallel(locations: List[Tuple[float, float]], zarr_data: xr.DataArray):
@@ -69,7 +91,7 @@ async def extract_data(request: LocationRequest):
 
     # Load the Zarr dataset based on model and model run
     zarr_data = load_zarr_dataset(request.model, request.model_run)
-
+    zarr_data = zarr_data.sortby('valid_time')
     # Batch size configuration
     batch_size = 50
     all_results = []

@@ -19,7 +19,9 @@ API_URL = "http://127.0.0.1:8000/extract/"
 
 # Prepare the request payload
 payload = {
-    "locations": random_locations  # Use the list of 300 random locations
+    "locations": random_locations, # Use the list of 300 random locations
+    "model":'ECMWF',
+    "model_run": '20250213_00' 
 }
 
 # Measure the time taken to send the request and receive the response

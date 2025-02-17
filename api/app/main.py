@@ -1,6 +1,4 @@
 import time
-import os
-import json
 import xarray as xr
 import numpy as np
 import dask.array as da
@@ -18,22 +16,20 @@ class LocationRequest(BaseModel):
     model: str  # Source model (e.g., ECMWF)
     model_run: str  # Model run (e.g., 12022025_00)
 
-# Function to load a Zarr dataset based on model and model run
+# AWS S3 Configuration
+S3_BUCKET = "s3://exampleapidata"
+S3_PREFIX = "weather_data/"  # Adjust as needed
+
+# Function to load a Zarr dataset from S3
 def load_zarr_dataset(model: str, model_run: str):
-    # Define the path to the model's Zarr file
-    zarr_directory = f"../data/{model}"
+    s3_path = f"s3://{S3_BUCKET}/{model}/{model_run}.zarr"
 
-    if not os.path.exists(zarr_directory):
-        raise HTTPException(status_code=404, detail="Model not available")
+    try:
+        # Load the Zarr dataset from S3 using xarray
+        return xr.open_zarr(s3_path,)
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Error loading dataset from S3: {str(e)}")
 
-    # Construct the file name based on model run (e.g., 12022025_00.zarr)
-    zarr_file = os.path.join(zarr_directory, f"{model_run}.zarr")
-
-    if not os.path.exists(zarr_file):
-        raise HTTPException(status_code=404, detail="Model run not found")
-
-    # Load the Zarr dataset using xarray
-    return xr.open_zarr(zarr_file)
 
 # Function to extract data for a single location
 def extract_data_for_location(lat: float, lon: float, zarr_data: xr.Dataset):
@@ -50,15 +46,10 @@ def extract_data_for_location(lat: float, lon: float, zarr_data: xr.Dataset):
             return {"lat": lat, "lon": lon, "message": "Longitude out of bounds"}
 
         # Extract the nearest data point
-        data_point = zarr_data.sel(
-            {lat_dim: lat, lon_dim: lon}, method="nearest"
-        )
+        data_point = zarr_data.sel({lat_dim: lat, lon_dim: lon}, method="nearest")
 
         # Ensure we get the correct valid time
-        if time_dim in data_point.coords:
-            valid_time = list(zarr_data.valid_time.to_pandas().unique().strftime("%Y-%m-%d %H:%M:%S"))
-        else:
-            valid_time = None  # If valid_time doesn't exist, return None
+        valid_time = list(zarr_data.valid_time.to_pandas().unique().strftime("%Y-%m-%d %H:%M:%S"))
 
         # Convert data to a serializable format
         data_dict = {
@@ -75,23 +66,20 @@ def extract_data_for_location(lat: float, lon: float, zarr_data: xr.Dataset):
     except Exception as e:
         return {"lat": lat, "lon": lon, "message": f"Error: {str(e)}"}
 
-
 # Function to process a batch of locations in parallel
 def extract_data_parallel(locations: List[Tuple[float, float]], zarr_data: xr.DataArray):
-    results = []
-    # Use Dask's delayed function to parallelize the extraction of data for each location
     tasks = [delayed(extract_data_for_location)(lat, lon, zarr_data) for lat, lon in locations]
-    results = compute(*tasks)  # Compute all tasks in parallel
-    return results
+    return compute(*tasks)  # Compute all tasks in parallel
 
 # Endpoint to process batch requests
 @app.post("/extract/")
 async def extract_data(request: LocationRequest):
     start_time = time.time()
 
-    # Load the Zarr dataset based on model and model run
+    # Load the Zarr dataset from S3
     zarr_data = load_zarr_dataset(request.model, request.model_run)
     zarr_data = zarr_data.sortby('valid_time')
+
     # Batch size configuration
     batch_size = 50
     all_results = []
@@ -113,3 +101,16 @@ async def extract_data(request: LocationRequest):
             "num_batches": len(request.locations) // batch_size + (1 if len(request.locations) % batch_size > 0 else 0)
         }
     }
+    
+
+@app.get("/")
+async def root():
+    print("in root method")
+    return {"message": "Hello, weather api"}
+
+
+
+#handler = Mangum(app, lifespan="off")
+
+#if __name__ == "__main__":
+#    uvicorn.run(app, host="0.0.0.0", port=5000)

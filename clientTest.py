@@ -12,10 +12,10 @@ def generate_random_locations(num_locations):
     return locations
 
 # Generate 300 random locations
-random_locations = generate_random_locations(300)
+random_locations = generate_random_locations(2)
 
 # Define the API URL
-API_URL = "http://127.0.0.1:8000/extract/"
+API_URL = "http://localhost:8000/extract/"
 
 # Prepare the request payload
 payload = {

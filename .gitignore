@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+env/
+dependencies/
+.env
+.env.local
+
+# Poetry dependencies
+.poetry/
+
+# Logs and local dev files
+*.log
+*.sqlite3
+*.db
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+docker-build/
+*.tar
+
+# VSCode / JetBrains / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python cache and testing
+*.pytest_cache/
+.coverage
+htmlcov/
+
+#old large data files
+old/
+
+#data files
+data/
+
+# AWS Sam build files
+.aws-sam/

@@ -15,7 +15,7 @@ def generate_random_locations(num_locations):
 random_locations = generate_random_locations(2)
 
 # Define the API URL
-API_URL = "http://localhost:8000/extract/"
+API_URL = "https://81gt1ca89k.execute-api.ap-southeast-2.amazonaws.com/extract/"
 
 # Prepare the request payload
 payload = {

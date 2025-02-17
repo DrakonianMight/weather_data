@@ -4,7 +4,7 @@ Description: >
   python3.12
 
   Sample SAM Template for FastAPI
-
+# This is based on the AWS SAM template for a FastAPI application: https://github.com/awslabs/aws-lambda-web-adapter/tree/main/examples/fastapi
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:

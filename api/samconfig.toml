@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "fastapi-wx-example"
+resolve_s3 = true
+s3_prefix = "fastapi-wx-example"
+region = "ap-southeast-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = ["FastAPIFunction=774305583363.dkr.ecr.ap-southeast-2.amazonaws.com/fastapiwxexampled95cf2d6/fastapifunctionead79d0drepo"]

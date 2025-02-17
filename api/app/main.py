@@ -26,7 +26,7 @@ def load_zarr_dataset(model: str, model_run: str):
 
     try:
         # Load the Zarr dataset from S3 using xarray
-        return xr.open_zarr(s3_path,)
+        return xr.open_zarr(s3_path)
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Error loading dataset from S3: {str(e)}")
 

@@ -19,6 +19,10 @@ Resources:
       Events:
         ApiEvents:
           Type: HttpApi
+          #testing this line to enable auth
+          #Properties:
+          #    Auth:
+          #      Authorizer: AWS_IAM
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./app
